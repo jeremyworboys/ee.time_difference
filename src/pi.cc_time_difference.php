@@ -43,24 +43,24 @@ class Cc_time_difference {
         }
 
         // Collect template data
-        $time_1  = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_1'));
-        $time_2  = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_2'));
-        $tagdata = $this->EE->TMPL->tagdata;
+        $time_1     = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_1'));
+        $time_2     = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_2'));
+        $tagdata    = $this->EE->TMPL->tagdata;
 
         // Find difference
         $interval = $time_1->diff($time_2, true);
 
         // Calculate segments
-        $cond['years']   = intval($interval->format('%y'));
-        $cond['months']  = intval($interval->format('%m')) + 12*$cond['years'];
-        $cond['days']    = intval($interval->format('%a')); // have to calculate days before weeks
-        $cond['weeks']   = intval($cond['days'] / 7);
-        $cond['hours']   = intval($interval->format('%h')) + 24*$cond['days'];
-        $cond['minutes'] = intval($interval->format('%i')) + 60*$cond['hours'];
-        $cond['seconds'] = intval($interval->format('%s')) + 60*$cond['minutes'];
+        $cond['years']     = intval($interval->format('%y'));
+        $cond['months']    = intval($interval->format('%m')) + 12*$cond['years'];
+        $cond['days']      = intval($interval->format('%a')); // have to calculate days before weeks
+        $cond['weeks']     = intval($cond['days'] / 7);
+        $cond['hours']     = intval($interval->format('%h')) + 24*$cond['days'];
+        $cond['minutes']   = intval($interval->format('%i')) + 60*$cond['hours'];
+        $cond['seconds']   = intval($interval->format('%s')) + 60*$cond['minutes'];
 
-        // Run conditionals
-        $tagdata = $this->EE->functions->prep_conditionals($tagdata, $cond);
+        // Run conditionals and variables
+        $tagdata   = $this->EE->functions->prep_conditionals($tagdata, $cond);
         $tagdata   = $this->EE->TMPL->parse_variables($tagdata, array($cond));
 
         // Send output
