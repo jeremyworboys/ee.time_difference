@@ -111,16 +111,34 @@ CC Time Difference creates the following conditional parameters to use:
 - `seconds` - The total number of seconds between the two dates.
 
 
+Variables
+===========================
+
+CC Time Difference creates the following variables to use:
+
+- `{years}` - The total number of years between the two dates.
+- `{months}` - The total number of months between the two dates.
+- `{days}` - The total number of days between the two dates.
+- `{weeks}` - The total number of weeks between the two dates.
+- `{hours}` - The total number of hours between the two dates.
+- `{minutes}` - The total number of minutes between the two dates.
+- `{seconds}` - The total number of seconds between the two dates.
+
+
 Example
 ===========================
 
 ```
 {exp:channel:entries channel="compare_time"}
     {exp:cc_time_difference time_1="{entry_date}" time_2="{current_time}"}
-        {if weeks < 1}
-            Posted less than one week ago.
+        {if days == 1}
+            Posted 1 day ago.
+        {if:elseif weeks < 1}
+            Posted {days} days ago.
+        {if:elseif weeks == 1}
+            Posted 1 week ago.
         {if:else}
-            Posted more than one week ago.
+            Posted {weeks} weeks ago.
         {/if}
     {/exp:cc_time_difference}
 {/exp:channel:entries}
@@ -129,6 +147,11 @@ Example
 
 Changelog
 ===========================
+
+Version 1.1.0
+---------------------------
+
+- Add variables
 
 Version 1.0.0
 ---------------------------
