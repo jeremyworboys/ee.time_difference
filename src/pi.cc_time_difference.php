@@ -61,6 +61,7 @@ class Cc_time_difference {
 
         // Run conditionals
         $tagdata = $this->EE->functions->prep_conditionals($tagdata, $cond);
+        $tagdata   = $this->EE->TMPL->parse_variables($tagdata, array($cond));
 
         // Send output
         $this->return_data = $tagdata;
