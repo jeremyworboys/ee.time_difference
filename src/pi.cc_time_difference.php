@@ -58,6 +58,7 @@ class Cc_time_difference {
         $cond['hours']     = intval($interval->format('%h')) + 24*$cond['days'];
         $cond['minutes']   = intval($interval->format('%i')) + 60*$cond['hours'];
         $cond['seconds']   = intval($interval->format('%s')) + 60*$cond['minutes'];
+        $cond['compare']   = intval($time_1->format('U')) - intval($time_2->format('U'));
 
         // Run conditionals and variables
         $tagdata   = $this->EE->functions->prep_conditionals($tagdata, $cond);
@@ -109,6 +110,9 @@ CC Time Difference creates the following conditional parameters to use:
 - `hours` - The total number of hours between the two dates.
 - `minutes` - The total number of minutes between the two dates.
 - `seconds` - The total number of seconds between the two dates.
+- `compare` - Compares the two times and returns a negative integer if `time_1`
+  is earlier, a positive integer if `time_2` is earlier or `0` if they are
+  equal.
 
 
 Variables
@@ -131,14 +135,18 @@ Example
 ```
 {exp:channel:entries channel="compare_time"}
     {exp:cc_time_difference time_1="{entry_date}" time_2="{current_time}"}
-        {if days == 1}
-            Posted 1 day ago.
-        {if:elseif weeks < 1}
-            Posted {days} days ago.
-        {if:elseif weeks == 1}
-            Posted 1 week ago.
+        {if compare < 0}
+            {if days == 1}
+                Posted 1 day ago.
+            {if:elseif weeks < 1}
+                Posted {days} days ago.
+            {if:elseif weeks == 1}
+                Posted 1 week ago.
+            {if:else}
+                Posted {weeks} weeks ago.
+            {/if}
         {if:else}
-            Posted {weeks} weeks ago.
+            I am from the future; I come in peace!
         {/if}
     {/exp:cc_time_difference}
 {/exp:channel:entries}
@@ -147,6 +155,11 @@ Example
 
 Changelog
 ===========================
+
+Version 1.2.0
+---------------------------
+
+- Add compare conditional
 
 Version 1.1.0
 ---------------------------
