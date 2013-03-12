@@ -156,6 +156,11 @@ Example
 Changelog
 ===========================
 
+Version 1.2.1
+---------------------------
+
+- Fix reported version number
+
 Version 1.2.0
 ---------------------------
 
