@@ -2,7 +2,7 @@
 
 if (!defined('CC_TIME_DIFFERENCE_VERSION')) {
     define('CC_TIME_DIFFERENCE_NAME', 'CC Time Difference');
-    define('CC_TIME_DIFFERENCE_VERSION', '1.2.1');
+    define('CC_TIME_DIFFERENCE_VERSION', '1.3.0');
 }
 
 $config['name'] = CC_TIME_DIFFERENCE_NAME;
