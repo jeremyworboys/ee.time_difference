@@ -45,20 +45,36 @@ class Cc_time_difference {
         // Collect template data
         $time_1     = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_1'));
         $time_2     = DateTime::createFromFormat('U', $this->EE->TMPL->fetch_param('time_2'));
+        $inclusive  = $this->EE->TMPL->fetch_param('inclusive', 'yes') === 'yes';
         $tagdata    = $this->EE->TMPL->tagdata;
 
         // Find difference
         $interval = $time_1->diff($time_2, true);
 
         // Calculate segments
-        $cond['years']     = intval($interval->format('%y'));
-        $cond['months']    = intval($interval->format('%m')) + 12*$cond['years'];
-        $cond['days']      = intval($interval->format('%a')); // have to calculate days before weeks
-        $cond['weeks']     = intval($cond['days'] / 7);
-        $cond['hours']     = intval($interval->format('%h')) + 24*$cond['days'];
-        $cond['minutes']   = intval($interval->format('%i')) + 60*$cond['hours'];
-        $cond['seconds']   = intval($interval->format('%s')) + 60*$cond['minutes'];
-        $cond['compare']   = intval($time_1->format('U')) - intval($time_2->format('U'));
+        $days = $interval->format('%a');
+
+        $cond['compare'] = intval($time_1->format('U')) - intval($time_2->format('U'));
+
+        if ($inclusive) {
+            $cond['years']     = intval($interval->format('%y'));
+            $cond['months']    = intval($interval->format('%m')) + 12*$cond['years'];
+            $cond['weeks']     = intval($days / 7);
+            $cond['days']      = intval($days);
+            $cond['hours']     = intval($interval->format('%h')) + 24*$cond['days'];
+            $cond['minutes']   = intval($interval->format('%i')) + 60*$cond['hours'];
+            $cond['seconds']   = intval($interval->format('%s')) + 60*$cond['minutes'];
+        }
+        else {
+             // have to calculate days before weeks
+            $cond['years']     = intval($interval->format('%y'));
+            $cond['months']    = intval($interval->format('%m'));
+            $cond['weeks']     = intval(($days - $cond['months'] * 30.4368) / 7);
+            $cond['days']      = intval($days - $cond['months'] * 30.4368 - $cond['weeks'] * 7);
+            $cond['hours']     = intval($interval->format('%h'));
+            $cond['minutes']   = intval($interval->format('%i'));
+            $cond['seconds']   = intval($interval->format('%s'));
+        }
 
         // Run conditionals and variables
         $tagdata   = $this->EE->functions->prep_conditionals($tagdata, $cond);
